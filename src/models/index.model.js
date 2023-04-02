@@ -1,7 +1,11 @@
 const db = {};
 
-db.users = require('./users.model');
-db.movies = require('./movies.model');
-db.theatre = require('./theatres.model');
+const { userModel } = require('./users.model');
+const { movieModel } = require('./movies.model');
+const { theatreModel } = require('./theatres.model');
+
+db.users = userModel;
+db.movies = movieModel;
+db.theatres = theatreModel;
 
 module.exports = { db }
