@@ -1,4 +1,5 @@
 const { theatreService } = require("../services/theatres.service");
+const { movieService } = require('../services/movies.service');
 
 async function getAllTheatres(req, res) {
 
@@ -157,10 +158,84 @@ async function deleteTheatres(req, res) {
     })
 }
 
+async function updateMoviesInTheatre(req, res) {
+  try {
+    let theatre = await theatreService.getTheatresById(req.params.id);
+
+    if (!theatre || theatre.length === 0) {
+      res.status(400).send(JSON.stringify({
+        status: 'fail',
+        message: 'No such theatre exist'
+      }))
+      return;
+    }
+
+    let movies = req.body.movieIds;
+    if (req.body.insert) {
+      movies.forEach(movieId => {
+        theatre.movies.push(movieId)
+      });
+    } else {
+      movies.forEach(movieId => {
+        theatre.movies = theatre.movies.filter(e => e != movieId)
+      })
+    }
+    await theatre.save();
+    res.status(200).send(JSON.stringify({
+      status: 'success',
+      message: 'Movie list updated successfully',
+      data: theatre
+    }))
+  } catch (err) {
+    console.log(err);
+    res.status(500).send(JSON.stringify({
+      status: 'fail',
+      message: 'Error in server'
+    }))
+  }
+}
+
+async function checkRunningMovies(req, res) {
+  const theatre = await theatreService.getTheatresById(req.params.theatreId);
+
+  if (!theatre || theatre.length === 0) {
+    res.status(400).send(JSON.stringify({
+      status: 'fail',
+      message: 'No such theate exist'
+    }))
+    return;
+  }
+
+  const movie = await movieService.getMoviesById(req.params.movieId);
+
+  try {
+    if (theatre.movies.includes(movie._id)) {
+      res.status(200).send(JSON.stringify({
+        status: 'success',
+        message: 'Movie is running currently',
+        data: theatre
+      }))
+    } else {
+      res.status(200).send(JSON.stringify({
+        status: 'success',
+        message: 'Movie is not running currently'
+      }))
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).send(JSON.stringify({
+      status: 'fail',
+      message: 'Error in server'
+    }))
+  }
+}
+
 module.exports = {
   getAllTheatres,
   getTheatresById,
   addTheatres,
   updateTheatres,
-  deleteTheatres
+  deleteTheatres,
+  updateMoviesInTheatre,
+  checkRunningMovies
 }

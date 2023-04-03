@@ -3,12 +3,13 @@ const express = require('express');
 const router = express.Router();
 
 const userController = require('../../src/controllers/users.controller');
+const validReqBody = require('../../src/middlewares/validReqBody.middleware');
 
 
 router
   .route('/')
   .get(userController.getAllUsers)
-  .post(userController.addUsers)
+  .post(validReqBody.validUserBody, userController.addUsers)
   .delete(userController.deleteUsers)
 
 router
