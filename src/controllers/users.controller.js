@@ -1,23 +1,23 @@
-const { movieService } = require("../services/movies.service");
+const { userService } = require('../services/users.service');
 
-async function getAllMovies(req, res) {
+async function getAllUsers(req, res) {
 
   let queryObj = {};
   if (req.query) queryObj = req.query;
 
-  return await movieService
-    .getAllMovies(queryObj)
+  return await userService
+    .getAllUsers(queryObj)
     .then((data) => {
       console.log(data);
       if (!data || data.length === 0) {
         res.status(400).send(JSON.stringify({
           status: 'fail',
-          message: 'No Movie data available'
+          message: 'No User data available'
         }))
       } else {
         res.status(200).send(JSON.stringify({
           status: 'success',
-          message: 'All movies fetched successfully',
+          message: 'All Users fetched successfully',
           data: data
         }))
       }
@@ -31,20 +31,20 @@ async function getAllMovies(req, res) {
     })
 }
 
-async function getMoviesById(req, res) {
-  return await movieService
-    .getMoviesById(req.params.id)
+async function getUsersById(req, res) {
+  return await userService
+    .getUsersById(req.params.id)
     .then((data) => {
       console.log(data);
       if (!data || data.length === 0) {
         res.status(400).send(JSON.stringify({
           status: 'fail',
-          message: 'No such Movie exist'
+          message: 'No such User exist'
         }))
       } else {
         res.status(200).send(JSON.stringify({
           status: 'success',
-          message: 'Movie fetched successfully',
+          message: 'User fetched successfully',
           data: data
         }))
       }
@@ -58,15 +58,15 @@ async function getMoviesById(req, res) {
     })
 }
 
-async function addMovies(req, res) {
-  let movie = req.body;
-  return await movieService
-    .addMovies(movie)
+async function addUsers(req, res) {
+  const user = req.body;
+  return await userService
+    .addUsers(user)
     .then((data) => {
       console.log(data);
       res.status(201).send(JSON.stringify({
         status: 'success',
-        message: 'Movie added successfully',
+        message: 'User added successfully',
         data: data
       }))
     })
@@ -79,30 +79,30 @@ async function addMovies(req, res) {
     })
 }
 
-async function updateMovies(req, res) {
+async function updateUser(req, res) {
   const update = req.body;
   const id = req.params.id;
 
-  let movie = await movieService.getMoviesById(id);
-  if (!movie || movie.length === 0) {
+  let user = await userService.getUsersById(id);
+  if (!user || user.length === 0) {
     res.status(400).send(JSON.stringify({
       status: 'fail',
-      message: 'No such movie exist'
+      message: 'No such user exist'
     }))
     return;
   }
 
-  return await movieService
-    .updateMovies(id, update)
+  return await userService
+    .updateUser(id, user)
     .then((data) => {
       console.log(data);
       res.status(200).send(JSON.stringify({
         status: 'success',
-        message: 'Movie updated successfully',
+        message: 'User updated successfully',
         data: data
       }))
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       res.status(500).send(JSON.stringify({
         status: 'fail',
@@ -111,32 +111,32 @@ async function updateMovies(req, res) {
     })
 }
 
-async function deleteMovies(req, res) {
+async function deleteUsers(req, res) {
   let id = req.params.id;
 
   if (req.query) {
     let queryObj = req.query;
-    let movie = await movieService.getAllMovies(queryObj);
-    if (!movie || movie.length === 0) {
+    let user = await userService.getAllUsers(queryObj);
+    if (!user || user.length === 0) {
       res.status(400).send(JSON.stringify({
         status: 'fail',
-        message: `Such movie doesn't exist`
+        message: `Such user doesn't exist`
       }))
       return;
     }
-    id = movie._id;
+    id = user._id;
   }
 
-  return await movieService
-    .deleteMovies(id)
+  return await userService
+    .deleteUsers(id)
     .then((data) => {
       console.log(data);
       res.status(200).send(JSON.stringify({
         status: 'success',
-        message: 'Movie deleted successfully'
+        message: 'User deleted successfully'
       }))
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       res.status(500).send(JSON.stringify({
         status: 'fail',
@@ -146,9 +146,9 @@ async function deleteMovies(req, res) {
 }
 
 module.exports = {
-  getAllMovies,
-  getMoviesById,
-  addMovies,
-  updateMovies,
-  deleteMovies
+  getAllUsers,
+  getUsersById,
+  addUsers,
+  updateUser,
+  deleteUsers
 }

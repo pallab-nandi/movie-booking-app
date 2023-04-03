@@ -9,11 +9,18 @@ async function getAllTheatres(req, res) {
     .getAllTheatres(queryObj)
     .then((data) => {
       console.log(data);
-      res.status(200).send(JSON.stringify({
-        status: 'success',
-        message: 'All theatres fetched successfully',
-        data: data
-      }))
+      if (!data || data.length === 0) {
+        res.status(400).send(JSON.stringify({
+          status: 'fail',
+          message: 'No Theatre data available'
+        }))
+      } else {
+        res.status(200).send(JSON.stringify({
+          status: 'success',
+          message: 'All theatres fetched successfully',
+          data: data
+        }))
+      }
     })
     .catch((err) => {
       console.log(err);
@@ -29,11 +36,18 @@ async function getTheatresById(req, res) {
     .getTheatresById(req.params.id)
     .then((data) => {
       console.log(data);
-      res.status(200).send(JSON.stringify({
-        status: 'success',
-        message: 'Theatre fetched successfully',
-        data: data
-      }))
+      if (!data || data.length === 0) {
+        res.status(400).send(JSON.stringify({
+          status: 'fail',
+          message: 'No such Theatre exist'
+        }))
+      } else {
+        res.status(200).send(JSON.stringify({
+          status: 'success',
+          message: 'Theatre fetched successfully',
+          data: data
+        }))
+      }
     })
     .catch((err) => {
       console.log(err);
@@ -69,6 +83,15 @@ async function updateTheatres(req, res) {
   const update = req.body;
   const id = req.params.id;
 
+  let theatre = await theatreService.getTheatresById(id);
+  if (!theatre || theatre.length === 0) {
+    res.status(400).send(JSON.stringify({
+      status: 'fail',
+      message: 'No such theatre exist'
+    }))
+    return;
+  }
+
   return await theatreService
     .updateTheatres(id, update)
     .then((data) => {
@@ -89,7 +112,20 @@ async function updateTheatres(req, res) {
 }
 
 async function deleteTheatres(req, res) {
-  const id = req.params.id;
+  let id = req.params.id;
+
+  if (req.query) {
+    let queryObj = req.query;
+    let theatre = await theatreService.getAllTheatres(queryObj);
+    if (!theatre || theatre.length === 0) {
+      res.status(400).send(JSON.stringify({
+        status: 'fail',
+        message: `Such theatre doesn't exist`
+      }))
+      return;
+    }
+    id = theatre._id;
+  }
 
   return await theatreService
     .deleteTheatres(id)

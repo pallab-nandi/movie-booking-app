@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -21,10 +22,20 @@ const userSchema = new mongoose.Schema({
   },
   userType: {
     type: String,
+    enum: [
+      'ADMIN',
+      'CLIENT',
+      'CUSTOMER'
+    ],
     default: "CUSTOMER"
   },
   userStatus: {
     type: String,
+    enum: [
+      'APPROVED',
+      'PENDING',
+      'REJECTED'
+    ],
     default: "APPROVED"
   },
   createdAt: {
@@ -42,6 +53,15 @@ const userSchema = new mongoose.Schema({
     }
   }
 })
+
+userSchema.pre('save', async (next) => {
+  this.password = await bcrypt.hashSync(this.password, 8);
+  next();
+})
+
+userSchema.methods.isValidPass = (pass) => {
+  return bcrypt.compare(pass, this.password);
+}
 
 const userModel = mongoose.model('users', userSchema);
 
