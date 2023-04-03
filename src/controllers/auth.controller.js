@@ -5,8 +5,7 @@ async function signUp(req, res) {
 
   return await authService
     .signUp(user)
-    .then((user) => {
-      console.log(user);
+    .then(() => {
       res.status(201).send(JSON.stringify({
         status: 'success',
         message: 'User registered successfully'

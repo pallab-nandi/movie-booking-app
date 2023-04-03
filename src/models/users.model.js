@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    required: true
   },
   email: {
     type: String,
@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
+    required: true
   },
   userType: {
     type: String,
@@ -54,13 +54,13 @@ const userSchema = new mongoose.Schema({
   }
 })
 
-userSchema.pre('save', async (next) => {
+userSchema.pre('save', async function (next) {
   this.password = await bcrypt.hash(this.password, 8);
   next();
 })
 
-userSchema.methods.isValidPass = (pass) => {
-  return bcrypt.compare(pass, this.password);
+userSchema.methods.isValidPass = async function (pass) {
+  return await bcrypt.compare(pass, this.password);
 }
 
 const userModel = mongoose.model('users', userSchema);
