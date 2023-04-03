@@ -5,7 +5,7 @@ function validTheatreBody(req, res, next) {
     !req.body.name
     || !req.body.description
     || !req.body.city
-    || !req.body.pincode
+    || !req.body.pinCode
   ) {
     res.status(400).send(JSON.stringify({
       status: 'fail',
