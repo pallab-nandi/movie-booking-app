@@ -9,6 +9,7 @@ router
   .route('/')
   .get(userController.getAllUsers)
   .post(userController.addUsers)
+  .delete(userController.deleteUsers)
 
 router
   .route('/:id')

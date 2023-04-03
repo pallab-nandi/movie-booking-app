@@ -112,7 +112,19 @@ async function updateTheatres(req, res) {
 }
 
 async function deleteTheatres(req, res) {
-  let id = req.params.id;
+  let id;
+
+  if (req.params.id) {
+    id = req.params.id;
+    let theatre = await theatreService.getTheatresById(id);
+    if (!theatre || theatre.length === 0) {
+      res.status(400).send(JSON.stringify({
+        status: 'fail',
+        message: 'No such theatre exist'
+      }))
+      return;
+    }
+  }
 
   if (req.query) {
     let queryObj = req.query;

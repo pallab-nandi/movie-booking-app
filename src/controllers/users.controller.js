@@ -112,7 +112,19 @@ async function updateUser(req, res) {
 }
 
 async function deleteUsers(req, res) {
-  let id = req.params.id;
+  let id;
+
+  if (req.params.id) {
+    id = req.params.id;
+    let user = await userService.getUsersById(id);
+    if (!user || user.length === 0) {
+      res.status(400).send(JSON.stringify({
+        status: 'fail',
+        message: 'No such user exist'
+      }))
+      return;
+    }
+  }
 
   if (req.query) {
     let queryObj = req.query;

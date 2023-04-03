@@ -8,6 +8,7 @@ router
   .route('/')
   .get(theatreController.getAllTheatres)
   .post(theatreController.addTheatres)
+  .delete(theatreController.deleteTheatres)
 
 router
   .route('/:id')
