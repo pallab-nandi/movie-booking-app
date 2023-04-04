@@ -5,17 +5,17 @@ const bookingSchema = new mongoose.Schema({
   theatreId: {
     type: mongoose.SchemaTypes.ObjectId,
     required: true,
-    ref: "Theatre"
+    ref: "theatres"
   },
   movieId: {
     type: mongoose.SchemaTypes.ObjectId,
     required: true,
-    ref: "Movie"
+    ref: "movies"
   },
   userId: {
     type: mongoose.SchemaTypes.ObjectId,
     required: true,
-    ref: "User"
+    ref: "users"
   },
   timing: {
     type: String,
@@ -24,6 +24,12 @@ const bookingSchema = new mongoose.Schema({
   status: {
     type: String,
     required: true,
+    enum: [
+      'BOOKED',
+      'CANCELLED',
+      'IN_PROGRESS',
+      'EXPIRED'
+    ],
     default: "IN_PROGRESS"
   },
   noOfSeats: {
@@ -50,6 +56,6 @@ const bookingSchema = new mongoose.Schema({
 })
 
 
-const bookingModel = mongoose.model("Booking", bookingSchema);
+const bookingModel = mongoose.model("bookings", bookingSchema);
 
 module.exports = { bookingModel }
