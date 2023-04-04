@@ -1,4 +1,5 @@
 const { userService } = require('../services/users.service');
+const errorHandler = require('../utils/errorHandler');
 
 async function getAllUsers(req, res) {
 
@@ -22,13 +23,7 @@ async function getAllUsers(req, res) {
         }))
       }
     })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send(JSON.stringify({
-        status: 'fail',
-        message: 'Error in server'
-      }))
-    })
+    .catch((err) => errorHandler.serverError(err));
 }
 
 async function getUsersById(req, res) {
@@ -49,13 +44,7 @@ async function getUsersById(req, res) {
         }))
       }
     })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send(JSON.stringify({
-        status: 'fail',
-        message: 'Error in server'
-      }))
-    })
+    .catch((err) => errorHandler.serverError(err));
 }
 
 async function addUsers(req, res) {
@@ -70,13 +59,7 @@ async function addUsers(req, res) {
         data: data
       }))
     })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send(JSON.stringify({
-        status: 'fail',
-        message: 'Error in server'
-      }))
-    })
+    .catch((err) => errorHandler.serverError(err));
 }
 
 async function updateUser(req, res) {
@@ -102,13 +85,7 @@ async function updateUser(req, res) {
         data: data
       }))
     })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send(JSON.stringify({
-        status: 'fail',
-        message: 'Error in server'
-      }))
-    })
+    .catch((err) => errorHandler.serverError(err));
 }
 
 async function deleteUsers(req, res) {
@@ -148,13 +125,7 @@ async function deleteUsers(req, res) {
         message: 'User deleted successfully'
       }))
     })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send(JSON.stringify({
-        status: 'fail',
-        message: 'Error in server'
-      }))
-    })
+    .catch((err) => errorHandler.serverError(err));
 }
 
 module.exports = {

@@ -1,4 +1,5 @@
 const { movieService } = require("../services/movies.service");
+const errorHandler = require('../utils/errorHandler');
 
 async function getAllMovies(req, res) {
 
@@ -22,13 +23,7 @@ async function getAllMovies(req, res) {
         }))
       }
     })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send(JSON.stringify({
-        status: 'fail',
-        message: 'Error in server'
-      }))
-    })
+    .catch((err) => errorHandler.serverError(err));
 }
 
 async function getMoviesById(req, res) {
@@ -49,13 +44,7 @@ async function getMoviesById(req, res) {
         }))
       }
     })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send(JSON.stringify({
-        status: 'fail',
-        message: 'Error in server'
-      }))
-    })
+    .catch((err) => errorHandler.serverError(err));
 }
 
 async function addMovies(req, res) {
@@ -70,13 +59,7 @@ async function addMovies(req, res) {
         data: data
       }))
     })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send(JSON.stringify({
-        status: 'fail',
-        message: 'Error in server'
-      }))
-    })
+    .catch((err) => errorHandler.serverError(err));
 }
 
 async function updateMovies(req, res) {
@@ -102,13 +85,7 @@ async function updateMovies(req, res) {
         data: data
       }))
     })
-    .catch(err => {
-      console.log(err);
-      res.status(500).send(JSON.stringify({
-        status: 'fail',
-        message: 'Error in server'
-      }))
-    })
+    .catch((err) => errorHandler.serverError(err));
 }
 
 async function deleteMovies(req, res) {
@@ -148,13 +125,7 @@ async function deleteMovies(req, res) {
         message: 'Movie deleted successfully'
       }))
     })
-    .catch(err => {
-      console.log(err);
-      res.status(500).send(JSON.stringify({
-        status: 'fail',
-        message: 'Error in server'
-      }))
-    })
+    .catch((err) => errorHandler.serverError(err));
 }
 
 module.exports = {

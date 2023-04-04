@@ -1,4 +1,5 @@
 const { authService } = require('../services/auth.service');
+const errorHandler = require('../utils/errorHandler');
 
 async function signUp(req, res) {
   let user = req.body;
@@ -10,13 +11,8 @@ async function signUp(req, res) {
         status: 'success',
         message: 'User registered successfully'
       }))
-    }).catch(err => {
-      console.log(err);
-      res.status(500).send(JSON.stringify({
-        status: 'fail',
-        message: 'Error in server'
-      }))
     })
+    .catch((err) => errorHandler.serverError(err));
 }
 
 async function signIn(req, res) {
@@ -32,13 +28,7 @@ async function signIn(req, res) {
         data: returnValue.data
       }))
     })
-    .catch(err => {
-      console.log(err);
-      res.status(500).send(JSON.stringify({
-        status: 'fail',
-        message: 'Error in server'
-      }))
-    })
+    .catch((err) => errorHandler.serverError(err));
 }
 
 module.exports = {

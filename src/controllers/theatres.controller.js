@@ -1,5 +1,6 @@
 const { theatreService } = require("../services/theatres.service");
 const { movieService } = require('../services/movies.service');
+const errorHandler = require('../utils/errorHandler');
 
 async function getAllTheatres(req, res) {
 
@@ -23,13 +24,7 @@ async function getAllTheatres(req, res) {
         }))
       }
     })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send(JSON.stringify({
-        status: 'fail',
-        message: 'Error in server'
-      }))
-    })
+    .catch((err) => errorHandler.serverError(err));
 }
 
 async function getTheatresById(req, res) {
@@ -50,13 +45,7 @@ async function getTheatresById(req, res) {
         }))
       }
     })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send(JSON.stringify({
-        status: 'fail',
-        message: 'Error in server'
-      }))
-    })
+    .catch((err) => errorHandler.serverError(err));
 }
 
 async function addTheatres(req, res) {
@@ -71,13 +60,7 @@ async function addTheatres(req, res) {
         data: data
       }))
     })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send(JSON.stringify({
-        status: 'fail',
-        message: 'Error in server'
-      }))
-    })
+    .catch((err) => errorHandler.serverError(err));
 }
 
 async function updateTheatres(req, res) {
@@ -103,13 +86,7 @@ async function updateTheatres(req, res) {
         data: data
       }))
     })
-    .catch(err => {
-      console.log(err);
-      res.status(500).send(JSON.stringify({
-        status: 'fail',
-        message: 'Error in server'
-      }))
-    })
+    .catch((err) => errorHandler.serverError(err));
 }
 
 async function deleteTheatres(req, res) {
@@ -149,13 +126,7 @@ async function deleteTheatres(req, res) {
         message: 'Theatre deleted successfully'
       }))
     })
-    .catch(err => {
-      console.log(err);
-      res.status(500).send(JSON.stringify({
-        status: 'fail',
-        message: 'Error in server'
-      }))
-    })
+    .catch((err) => errorHandler.serverError(err));
 }
 
 async function updateMoviesInTheatre(req, res) {
@@ -187,11 +158,7 @@ async function updateMoviesInTheatre(req, res) {
       data: theatre
     }))
   } catch (err) {
-    console.log(err);
-    res.status(500).send(JSON.stringify({
-      status: 'fail',
-      message: 'Error in server'
-    }))
+    errorHandler.serverError(err);
   }
 }
 
@@ -222,11 +189,7 @@ async function checkRunningMovies(req, res) {
       }))
     }
   } catch (err) {
-    console.log(err);
-    res.status(500).send(JSON.stringify({
-      status: 'fail',
-      message: 'Error in server'
-    }))
+    errorHandler.serverError(err)
   }
 }
 

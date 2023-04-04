@@ -1,4 +1,5 @@
 const { bookingService } = require('../services/booking.service');
+const errorHandler = require('../utils/errorHandler');
 
 async function createBooking(req, res) {
   let ticket = req.body;
@@ -14,13 +15,8 @@ async function createBooking(req, res) {
         message: 'Ticket booked successfully',
         ticket: data
       }))
-    }).catch(err => {
-      console.log(err);
-      res.status(500).send(JSON.stringify({
-        status: 'fail',
-        message: 'Error in server'
-      }))
     })
+    .catch((err) => errorHandler.serverError(err));
 }
 
 module.exports = {
