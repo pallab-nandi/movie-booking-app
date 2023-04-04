@@ -9,18 +9,18 @@ const authValidator = require('../../src/middlewares/auth.middleware');
 router
   .route('/')
   .get(authValidator.verifyToken, theatreController.getAllTheatres)
-  .post([authValidator.verifyToken, authValidator.isAdmin, validReqBody.validTheatreBody, validReqBody.duplicateTheatre], theatreController.addTheatres)
-  .delete([authValidator.verifyToken, authValidator.isAdmin], theatreController.deleteTheatres)
+  .post([authValidator.verifyToken, authValidator.isAuthorized, validReqBody.validTheatreBody, validReqBody.duplicateTheatre], theatreController.addTheatres)
+  .delete([authValidator.verifyToken, authValidator.isAuthorized], theatreController.deleteTheatres)
 
 router
   .route('/:id')
   .get([authValidator.verifyToken], theatreController.getTheatresById)
-  .put([authValidator.verifyToken, authValidator.isAdmin], theatreController.updateTheatres)
-  .delete([authValidator.verifyToken, authValidator.isAdmin], theatreController.deleteTheatres)
+  .put([authValidator.verifyToken, authValidator.isAuthorized], theatreController.updateTheatres)
+  .delete([authValidator.verifyToken, authValidator.isAuthorized], theatreController.deleteTheatres)
 
 router
   .route('/:id/movies')
-  .put([authValidator.verifyToken, authValidator.isAdmin], theatreController.updateMoviesInTheatre)
+  .put([authValidator.verifyToken, authValidator.isAuthorized], theatreController.updateMoviesInTheatre)
 
 router
   .route('/:theatreId/movie/:movieId')

@@ -44,7 +44,21 @@ async function isAdmin(req, res, next) {
   next();
 }
 
+async function isAuthorized(req, res, next) {
+  const id = req._id;
+
+  const user = await userService.findOneByUserId(id);
+  if ((user && user.userType === 'CUSTOMER') || user.userStatus !== 'APPROVED') {
+    return res.status(400).send(JSON.stringify({
+      status: 'fail',
+      message: 'Unauthorize Access'
+    }))
+  }
+  next();
+}
+
 module.exports = {
   verifyToken,
-  isAdmin
+  isAdmin,
+  isAuthorized
 }
