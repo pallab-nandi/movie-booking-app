@@ -1,4 +1,5 @@
 const ObjectId = require('mongoose').Types.ObjectId;
+const { bookingService } = require('../services/booking.service');
 const { theatreService } = require("../services/theatres.service");
 
 function validTheatreBody(req, res, next) {
@@ -59,13 +60,15 @@ function validMovieBody(req, res, next) {
 async function validateBookingReqBody(req, res, next) {
   if (!req.body.theatreId) {
     return res.status(400).send({
-      msg: 'theatreId is required'
+      status: 'fail',
+      message: 'theatreId is required'
     })
   }
 
   if (!ObjectId.isValid(req.body.theatreId)) {
     return res.status(400).send({
-      msg: 'theatreId format is not correct'
+      status: 'fail',
+      message: 'theatreId format is not correct'
     })
   }
 
@@ -73,38 +76,78 @@ async function validateBookingReqBody(req, res, next) {
 
   if (!theatre) {
     return res.status(400).send({
-      msg: 'This theatre does not exist in DB'
+      status: 'fail',
+      message: 'This theatre does not exist'
     })
   }
 
   if (!req.body.movieId) {
     return res.status(400).send({
-      msg: 'movieId is required'
+      status: 'fail',
+      message: 'movieId is required'
     })
   }
 
   if (!ObjectId.isValid(req.body.movieId)) {
     return res.status(400).send({
-      msg: 'movieId format is not correct'
+      status: 'fail',
+      message: 'movieId format is not correct'
     })
   }
 
   if (!theatre.movies.includes(req.body.movieId)) {
     return res.status(400).send({
-      msg: `This movieId ${req.body.movieId} does not 
+      status: 'fail',
+      message: `This movieId ${req.body.movieId} does not 
           exist in this theatreId ${req.body.theatreId}`
     })
   }
 
   if (!req.body.timing) {
     return res.status(400).send({
-      msg: 'timing is required'
+      status: 'fail',
+      message: 'timing is required'
     })
   }
 
   if (!req.body.noOfSeats) {
     return res.status(400).send({
-      msg: 'noOfSeats is required'
+      status: 'fail',
+      message: 'noOfSeats is required'
+    })
+  }
+
+  next();
+}
+
+async function validatePaymentReqBody(req, res, next) {
+  if (!req.body.bookingId) {
+    return res.status(400).send({
+      status: 'fail',
+      message: 'bookingId is required'
+    })
+  }
+
+  if (!ObjectId.isValid(req.body.bookingId)) {
+    return res.status(400).send({
+      status: 'fail',
+      message: 'bookingId format is not correct'
+    })
+  }
+
+  const booking = await bookingService.getBookingById(req.body.bookingId)
+
+  if (!booking) {
+    return res.status(400).send({
+      status: 'fail',
+      message: 'This Booking does not exist in DB'
+    })
+  }
+
+  if (req.body.amount !== booking.totalCost) {
+    return res.status(400).send({
+      status: 'fail',
+      message: 'please enter correct amount which is' + booking.totalCost
     })
   }
 
@@ -116,5 +159,6 @@ module.exports = {
   validTheatreBody,
   validUserBody,
   duplicateTheatre,
-  validateBookingReqBody
+  validateBookingReqBody,
+  validatePaymentReqBody
 }
