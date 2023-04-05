@@ -18,9 +18,9 @@ function validTheatreBody(req, res, next) {
 
 async function duplicateTheatre(req, res, next) {
   let theatre = req.body;
-  let exist = await theatreService.getAllTheatres(theatre);
+  let existTheatre = await theatreService.getAllTheatres(theatre);
 
-  if (exist) {
+  if (existTheatre.length !== 0) {
     res.status(400).send(JSON.stringify({
       status: 'fail',
       message: 'Such theatre already exists in the area'
@@ -147,7 +147,7 @@ async function validatePaymentReqBody(req, res, next) {
   if (req.body.amount !== booking.totalCost) {
     return res.status(400).send({
       status: 'fail',
-      message: 'please enter correct amount which is' + booking.totalCost
+      message: 'please enter correct amount which is Rs.' + booking.totalCost
     })
   }
 

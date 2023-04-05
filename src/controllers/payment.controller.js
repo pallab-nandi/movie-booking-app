@@ -2,11 +2,13 @@ const { paymentService } = require('../services/payment.service');
 const errorHandler = require('../utils/errorHandler');
 
 async function getAllPayment(req, res) {
+  const userId = req._id;
+
   let queryObj = {};
   if (queryObj) queryObj = req.queryObj;
 
   return await paymentService
-    .getAllPayment(queryObj)
+    .getAllPayment(userId, queryObj)
     .then((data) => {
       console.log(data);
       if (!data || data.length === 0) {

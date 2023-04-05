@@ -6,8 +6,8 @@ class PaymentService {
     this.schema = db.payments;
   }
 
-  async getAllPayment(queryObj) {
-    let user = await db.users.findOne({ _id: req._id });
+  async getAllPayment(userId, queryObj) {
+    let user = await db.users.findOne({ _id: userId });
     if (user.userType !== 'ADMIN') {
       let bookings = await db.bookings.find({ userId: user._id });
 
@@ -58,7 +58,7 @@ class PaymentService {
 
       paymentBody.status = 'SUCCESS';
 
-      const payment = await this.schema.create(payment);
+      const payment = await this.schema.create(paymentBody);
       console.log(payment);
       return {
         statusCode: 200,

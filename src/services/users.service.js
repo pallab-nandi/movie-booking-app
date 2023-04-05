@@ -35,12 +35,6 @@ class UserService {
       .schema
       .deleteOne({ _id: id })
   }
-
-  findOneByUserId(userId) {
-    return this
-      .schema
-      .findOne({ userId })
-  }
 }
 
 const userService = new UserService();

@@ -12,10 +12,10 @@ class BookingService {
       .create(ticket);
   }
 
-  async getAllBooking(queryObj) {
-    let user = await db.users.findOne({ _id: req._id });
+  async getAllBooking(id, queryObj) {
+    let user = await db.users.findOne({ _id: id });
     if (user.userType !== 'ADMIN') {
-      queryObj.userId = req._id;
+      queryObj.userId = id;
     }
 
     return this

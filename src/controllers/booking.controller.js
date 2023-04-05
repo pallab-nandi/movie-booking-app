@@ -3,6 +3,7 @@ const errorHandler = require('../utils/errorHandler');
 
 async function createBooking(req, res) {
   let ticket = req.body;
+  ticket.userId = req._id;
 
   ticket.totalCost = ticket.noOfSeats * 200;
 
@@ -20,11 +21,13 @@ async function createBooking(req, res) {
 }
 
 async function getAllBooking(req, res) {
+  const userId = req._id;
+
   let queryObj = {};
   if (req.query) queryObj = req.query;
 
   return await bookingService
-    .getAllBooking(queryObj)
+    .getAllBooking(userId, queryObj)
     .then((data) => {
       console.log(data);
       if (!data || data.length === 0) {
@@ -35,7 +38,8 @@ async function getAllBooking(req, res) {
       } else {
         res.status(200).send(JSON.stringify({
           status: 'success',
-          message: 'All Booking are fetched successfully'
+          message: 'All Booking are fetched successfully',
+          data: data
         }))
       }
     })
@@ -57,7 +61,8 @@ async function getBookingById(req, res) {
       } else {
         res.status(200).send(JSON.stringify({
           status: 'success',
-          message: 'Booking fetched successfully'
+          message: 'Booking fetched successfully',
+          data: data
         }))
       }
     })

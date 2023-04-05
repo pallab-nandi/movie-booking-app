@@ -46,8 +46,7 @@ async function isAdmin(req, res, next) {
 
 async function isAuthorized(req, res, next) {
   const id = req._id;
-
-  const user = await userService.findOneByUserId(id);
+  const user = await userService.getUsersById(id);
   if ((user && user.userType === 'CUSTOMER') || user.userStatus !== 'APPROVED') {
     return res.status(400).send(JSON.stringify({
       status: 'fail',
