@@ -1,6 +1,7 @@
 const { theatreService } = require("../services/theatres.service");
 const { movieService } = require('../services/movies.service');
 const errorHandler = require('../utils/errorHandler');
+const { userService } = require("../services/users.service");
 
 async function getAllTheatres(req, res) {
 
@@ -50,6 +51,12 @@ async function getTheatresById(req, res) {
 
 async function addTheatres(req, res) {
   let theatre = req.body;
+
+  let user = await userService.getUsersById(req._id);
+  if (user.userType === 'CLIENT' && user.userStatus === 'APPROVED') {
+    theatre.ownerId = req._id;
+  }
+
   return await theatreService
     .addTheatres(theatre)
     .then((data) => {

@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { userService } = require('../services/users.service');
+const { theatreService } = require('../services/theatres.service');
 
 async function verifyToken(req, res, next) {
   const token = req.headers['x-access-token'];
@@ -52,8 +53,18 @@ async function isAuthorized(req, res, next) {
       status: 'fail',
       message: 'Unauthorize Access'
     }))
-  }
-  next();
+  } else if (req.params.id && user.userType !== 'ADMIN') {
+    const theatreId = req.params.id;
+    const theatre = await theatreService.getTheatresById(theatreId);
+
+    if (req._id !== theatre.ownerId) {
+      return res.status(400).send(JSON.stringify({
+        status: 'fail',
+        message: `Unauthorize Access! You are not the owner of this theatre`
+      }))
+    }
+    next();
+  } else next();
 }
 
 module.exports = {

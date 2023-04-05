@@ -21,6 +21,11 @@ const theatreSchema = new mongoose.Schema({
     type: Number,
     required: [true, 'Enter valid PIN code']
   },
+  ownerId: {
+    type: mongoose.SchemaTypes.ObjectId,
+    required: true,
+    ref: 'users'
+  },
   createdAt: {
     // I want to default to a new date
     type: Date,
