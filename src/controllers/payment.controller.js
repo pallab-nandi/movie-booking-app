@@ -1,5 +1,8 @@
+const { bookingService } = require('../services/booking.service');
 const { paymentService } = require('../services/payment.service');
+const { userService } = require('../services/users.service');
 const errorHandler = require('../utils/errorHandler');
+const { sendMail } = require('../utils/notification');
 
 async function getAllPayment(req, res) {
   const userId = req._id;
@@ -55,7 +58,18 @@ async function createPayment(req, res) {
 
   return await paymentService
     .createPayment(paymentBody)
-    .then((data) => {
+    .then(async (data) => {
+      console.log(data);
+
+      let booking = await bookingService.getBookingById(data.payment.bookingId);
+      let sendData = {
+        paymentId: data.payment._id,
+        paymentStatus: data.payment.status,
+        booking
+      }
+      let reciepent = await userService.getUsersById(booking.userId);
+      await sendMail('Payment done successfully', JSON.stringify(sendData), reciepent.email);
+
       res.status(data.statusCode).send(JSON.stringify({
         status: data.status,
         message: data.message,

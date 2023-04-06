@@ -1,5 +1,6 @@
 const { userService } = require('../services/users.service');
 const errorHandler = require('../utils/errorHandler');
+const { sendMail } = require('../utils/notification');
 
 async function getAllUsers(req, res) {
 
@@ -51,8 +52,19 @@ async function addUsers(req, res) {
   const user = req.body;
   return await userService
     .addUsers(user)
-    .then((data) => {
+    .then(async (data) => {
       console.log(data);
+
+      await sendMail(`Hey ${data.name}, your User registration is successful`, JSON.stringify({
+        _id: data._id,
+        name: data.name,
+        email: data.email,
+        username: data.userId,
+        role: data.userType,
+        status: data.userStatus,
+        createdAt: data.createdAt
+      }), data.email);
+
       res.status(201).send(JSON.stringify({
         status: 'success',
         message: 'User added successfully',
@@ -75,8 +87,19 @@ async function updateUser(req, res) {
 
   return await userService
     .updateUser(userId, update)
-    .then((data) => {
+    .then(async (data) => {
       console.log(data);
+
+      await sendMail(`Hey ${data.name}, your profile update is successful`, JSON.stringify({
+        _id: data._id,
+        name: data.name,
+        email: data.email,
+        username: data.userId,
+        role: data.userType,
+        status: data.userStatus,
+        createdAt: data.createdAt
+      }), data.email);
+
       res.status(200).send(JSON.stringify({
         status: 'success',
         message: 'User updated successfully',
@@ -92,8 +115,19 @@ async function updateUserPassword(req, res) {
 
   return await userService
     .updateUser(userId, password)
-    .then((data) => {
+    .then(async (data) => {
       console.log(data);
+
+      await sendMail(`Hey ${data.name}, your password updated successfully`, JSON.stringify({
+        _id: data._id,
+        name: data.name,
+        email: data.email,
+        username: data.userId,
+        role: data.userType,
+        status: data.userStatus,
+        createdAt: data.createdAt
+      }), data.email);
+
       res.status(200).send(JSON.stringify({
         status: 'success',
         message: 'Password updated successfully',

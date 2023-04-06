@@ -8,6 +8,7 @@ class AuthService {
       .addUsers(user)
       .then((data) => {
         if (data.userType && data.userType !== 'CUSTOMER') data.userStatus = 'PENDING'
+        return data;
       })
       .catch(err => {
         console.log(err);

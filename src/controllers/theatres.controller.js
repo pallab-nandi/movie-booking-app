@@ -2,6 +2,7 @@ const { theatreService } = require("../services/theatres.service");
 const { movieService } = require('../services/movies.service');
 const errorHandler = require('../utils/errorHandler');
 const { userService } = require("../services/users.service");
+const { sendMail } = require("../utils/notification");
 
 async function getAllTheatres(req, res) {
 
@@ -59,8 +60,13 @@ async function addTheatres(req, res) {
 
   return await theatreService
     .addTheatres(theatre)
-    .then((data) => {
+    .then(async (data) => {
       console.log(data);
+      let user = await userService.getUsersById(data.ownerId);
+      let maillist = ['pallabnandi6@gmail.com', user.email]; //owner and client email to notify both
+
+      await sendMail('New Theatre added to the database', JSON.stringify(data), maillist);
+
       res.status(201).send(JSON.stringify({
         status: 'success',
         message: 'Theatre added successfully',
@@ -85,8 +91,14 @@ async function updateTheatres(req, res) {
 
   return await theatreService
     .updateTheatres(id, update)
-    .then((data) => {
+    .then(async (data) => {
       console.log(data);
+
+      let user = await userService.getUsersById(data.ownerId);
+      let maillist = ['pallabnandi6@gmail.com', user.email]; //owner and client email to notify both
+
+      await sendMail('Theatre details updated successfully', JSON.stringify(data), maillist);
+
       res.status(200).send(JSON.stringify({
         status: 'success',
         message: 'Theatre updated successfully',
@@ -159,6 +171,12 @@ async function updateMoviesInTheatre(req, res) {
       })
     }
     await theatre.save();
+
+    let user = await userService.getUsersById(theatre.ownerId);
+    let maillist = ['pallabnandi6@gmail.com', user.email]; //owner and client email to notify both
+
+    await sendMail(`Movie list changed in ${theatre.name} successfully`, JSON.stringify(theatre), maillist);
+
     res.status(200).send(JSON.stringify({
       status: 'success',
       message: 'Movie list updated successfully',

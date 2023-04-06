@@ -22,7 +22,7 @@ const movieSchema = new mongoose.Schema({
     required: [true, 'Please enter a Poster URL']
   },
   language: {
-    type: String,
+    type: [String],
     required: true,
     default: "Hindi"
   },
@@ -39,7 +39,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
     enum: [
       'RELEASED',
-      'UNRELEASED',
+      'UPCOMING',
       'BLOCKED'
     ],
     default: "RELEASED"

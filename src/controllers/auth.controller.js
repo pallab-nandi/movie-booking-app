@@ -1,15 +1,29 @@
 const { authService } = require('../services/auth.service');
 const errorHandler = require('../utils/errorHandler');
+const { sendMail } = require('../utils/notification');
 
 async function signUp(req, res) {
   let user = req.body;
 
   return await authService
     .signUp(user)
-    .then(() => {
+    .then(async (data) => {
+      console.log(data);
+
+      await sendMail(`Hey ${data.name}, your User registration is successful`, JSON.stringify({
+        _id: data._id,
+        name: data.name,
+        email: data.email,
+        username: data.userId,
+        role: data.userType,
+        status: data.userStatus,
+        createdAt: data.createdAt
+      }), data.email);
+
       res.status(201).send(JSON.stringify({
         status: 'success',
-        message: 'User registered successfully'
+        message: 'User registered successfully',
+        data: data
       }))
     })
     .catch((err) => errorHandler.serverError(err));
