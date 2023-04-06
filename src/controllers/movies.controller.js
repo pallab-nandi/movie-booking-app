@@ -91,6 +91,19 @@ async function updateMovies(req, res) {
 async function deleteMovies(req, res) {
   let id;
 
+  if (Object.entries(req.query).length !== 0) {
+    let queryObj = req.query;
+    let movie = await movieService.getAllMovies(queryObj);
+    if (!movie || movie.length === 0) {
+      res.status(400).send(JSON.stringify({
+        status: 'fail',
+        message: `Such movie doesn't exist`
+      }))
+      return;
+    }
+    id = movie[0]._id;
+  }
+
   if (req.params.id) {
     id = req.params.id;
     let movie = await movieService.getMoviesById(id);
@@ -101,19 +114,6 @@ async function deleteMovies(req, res) {
       }))
       return;
     }
-  }
-
-  if (req.query) {
-    let queryObj = req.query;
-    let movie = await movieService.getAllMovies(queryObj);
-    if (!movie || movie.length === 0) {
-      res.status(400).send(JSON.stringify({
-        status: 'fail',
-        message: `Such movie doesn't exist`
-      }))
-      return;
-    }
-    id = movie._id;
   }
 
   return await movieService

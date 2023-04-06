@@ -1,6 +1,7 @@
 const { userService } = require('../services/users.service');
 const errorHandler = require('../utils/errorHandler');
 const { sendMail } = require('../utils/notification');
+const bcrypt = require('bcrypt');
 
 async function getAllUsers(req, res) {
 
@@ -81,6 +82,10 @@ async function updateUser(req, res) {
 
   let user = await userService.getUsersById(id);
 
+  if (update.password) {
+    update.password = await bcrypt.hash(update.password, 8);
+  }
+
   if ((update.userStatus && user.userType !== 'ADMIN') || user.userStatus !== 'APPROVED') {
     delete update.userStatus;
   }
@@ -111,10 +116,12 @@ async function updateUser(req, res) {
 
 async function updateUserPassword(req, res) {
   const userId = req.params.id;
-  const password = req.body.password;
+  let password = req.body.password;
+
+  password = await bcrypt.hash(password, 8);
 
   return await userService
-    .updateUser(userId, password)
+    .updateUser(userId, { password })
     .then(async (data) => {
       console.log(data);
 
@@ -152,7 +159,7 @@ async function deleteUsers(req, res) {
     }
   }
 
-  if (req.query) {
+  if (Object.entries(req.query).length !== 0) {
     let queryObj = req.query;
     let user = await userService.getAllUsers(queryObj);
     if (!user || user.length === 0) {

@@ -71,7 +71,15 @@ async function getBookingById(req, res) {
 
 async function updateBookingById(req, res) {
   const id = req.params.id;
-  const update = req.body;
+  let update = req.body;
+
+  if (update.totalCost) {
+    delete update.totalCost;
+  }
+
+  if (update.noOfSeats) {
+    update.totalCost = update.noOfSeats * 200; // constant ticket price - Rs.200
+  }
 
   let booking = await bookingService.getBookingById(id);
   if (!booking || booking.length === 0) {

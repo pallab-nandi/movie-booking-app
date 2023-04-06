@@ -63,7 +63,7 @@ async function addTheatres(req, res) {
     .then(async (data) => {
       console.log(data);
       let user = await userService.getUsersById(data.ownerId);
-      let maillist = ['pallabnandi6@gmail.com', user.email]; //owner and client email to notify both
+      let maillist = ['pallabnandi.dev@gmail.com', user.email]; //owner and client email to notify both
 
       await sendMail('New Theatre added to the database', JSON.stringify(data), maillist);
 
@@ -95,7 +95,7 @@ async function updateTheatres(req, res) {
       console.log(data);
 
       let user = await userService.getUsersById(data.ownerId);
-      let maillist = ['pallabnandi6@gmail.com', user.email]; //owner and client email to notify both
+      let maillist = ['pallabnandi.dev@gmail.com', user.email]; //owner and client email to notify both
 
       await sendMail('Theatre details updated successfully', JSON.stringify(data), maillist);
 
@@ -111,6 +111,19 @@ async function updateTheatres(req, res) {
 async function deleteTheatres(req, res) {
   let id;
 
+  if (Object.entries(req.query).length !== 0) {
+    let queryObj = req.query;
+    let theatre = await theatreService.getAllTheatres(queryObj);
+    if (!theatre || theatre.length === 0) {
+      res.status(400).send(JSON.stringify({
+        status: 'fail',
+        message: `Such theatre doesn't exist`
+      }))
+      return;
+    }
+    id = theatre[0]._id;
+  }
+
   if (req.params.id) {
     id = req.params.id;
     let theatre = await theatreService.getTheatresById(id);
@@ -121,19 +134,6 @@ async function deleteTheatres(req, res) {
       }))
       return;
     }
-  }
-
-  if (req.query) {
-    let queryObj = req.query;
-    let theatre = await theatreService.getAllTheatres(queryObj);
-    if (!theatre || theatre.length === 0) {
-      res.status(400).send(JSON.stringify({
-        status: 'fail',
-        message: `Such theatre doesn't exist`
-      }))
-      return;
-    }
-    id = theatre._id;
   }
 
   return await theatreService
@@ -173,7 +173,7 @@ async function updateMoviesInTheatre(req, res) {
     await theatre.save();
 
     let user = await userService.getUsersById(theatre.ownerId);
-    let maillist = ['pallabnandi6@gmail.com', user.email]; //owner and client email to notify both
+    let maillist = ['pallabnandi.dev@gmail.com', user.email]; //owner and client email to notify both
 
     await sendMail(`Movie list changed in ${theatre.name} successfully`, JSON.stringify(theatre), maillist);
 

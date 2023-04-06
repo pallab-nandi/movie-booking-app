@@ -61,14 +61,17 @@ async function createPayment(req, res) {
     .then(async (data) => {
       console.log(data);
 
-      let booking = await bookingService.getBookingById(data.payment.bookingId);
-      let sendData = {
-        paymentId: data.payment._id,
-        paymentStatus: data.payment.status,
-        booking
+      if (data.payment) {
+        let booking = await bookingService.getBookingById(data.payment.bookingId);
+        let sendData = {
+          paymentId: data.payment._id,
+          paymentStatus: data.payment.status,
+          booking
+        }
+        let reciepent = await userService.getUsersById(booking.userId);
+        await sendMail('Payment done successfully', JSON.stringify(sendData), reciepent.email);
       }
-      let reciepent = await userService.getUsersById(booking.userId);
-      await sendMail('Payment done successfully', JSON.stringify(sendData), reciepent.email);
+
 
       res.status(data.statusCode).send(JSON.stringify({
         status: data.status,

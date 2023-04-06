@@ -4,15 +4,15 @@ const transporter = nodemailer.createTransport({
   port: 465,
   host: 'smtp.gmail.com',
   auth: {
-    user: 'pallabnandi6@gmail.com',
-    pass: 'ayngkexfcqzknksu'
+    user: 'pallabnandi.dev@gmail.com',
+    pass: 'pecyllcsrwwutwyf'
   },
   secure: true
 })
 
 const sendMail = async (subject, body, to) => {
   const mailData = {
-    from: 'movie-booking-app@pallabnandi.com',
+    from: 'pallabnandi.dev@gmail.com',
     to: to,
     subject: subject,
     text: body

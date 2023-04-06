@@ -14,6 +14,6 @@ router
 router
   .route('/:id')
   .get(authValidator.verifyToken, bookingController.getBookingById)
-  .put([authValidator.verifyToken, authValidator.isAuthorized, validReqBody.validateBookingReqBody], bookingController.updateBookingById)
+  .put([authValidator.verifyToken, authValidator.isAuthorized], bookingController.updateBookingById)
 
 module.exports = router;
