@@ -24,16 +24,22 @@ class UserService {
       .create(user);
   }
 
-  updateUser(id, update) {
+  updateUser(userId, update) {
     return this
       .schema
-      .findOneAndUpdate({ _id: id }, update);
+      .findOneAndUpdate({ userId }, update);
   }
 
   deleteUsers(id) {
     return this
       .schema
       .deleteOne({ _id: id })
+  }
+
+  findOneByUserId(userId) {
+    return this
+      .schema
+      .findOne({ userId })
   }
 }
 

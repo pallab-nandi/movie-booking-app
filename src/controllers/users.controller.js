@@ -63,20 +63,18 @@ async function addUsers(req, res) {
 }
 
 async function updateUser(req, res) {
+  const id = req._id;
+  const userId = req.params.id;
   const update = req.body;
-  const id = req.params.id;
 
   let user = await userService.getUsersById(id);
-  if (!user || user.length === 0) {
-    res.status(400).send(JSON.stringify({
-      status: 'fail',
-      message: 'No such user exist'
-    }))
-    return;
+
+  if ((update.userStatus && user.userType !== 'ADMIN') || user.userStatus !== 'APPROVED') {
+    delete update.userStatus;
   }
 
   return await userService
-    .updateUser(id, user)
+    .updateUser(userId, update)
     .then((data) => {
       console.log(data);
       res.status(200).send(JSON.stringify({
@@ -86,6 +84,23 @@ async function updateUser(req, res) {
       }))
     })
     .catch((err) => errorHandler.serverError(err));
+}
+
+async function updateUserPassword(req, res) {
+  const userId = req.params.id;
+  const password = req.body.password;
+
+  return await userService
+    .updateUser(userId, password)
+    .then((data) => {
+      console.log(data);
+      res.status(200).send(JSON.stringify({
+        status: 'success',
+        message: 'Password updated successfully',
+        data: data
+      }))
+    })
+    .catch(err => errorHandler.serverError(err));
 }
 
 async function deleteUsers(req, res) {
@@ -133,5 +148,6 @@ module.exports = {
   getUsersById,
   addUsers,
   updateUser,
-  deleteUsers
+  deleteUsers,
+  updateUserPassword
 }

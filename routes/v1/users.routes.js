@@ -16,7 +16,11 @@ router
 router
   .route('/:id')
   .get([authValidator.verifyToken, authValidator.isAdmin], userController.getUsersById)
-  .put([authValidator.verifyToken, authValidator.isAdmin], userController.updateUser)
+  .put([authValidator.verifyToken, authValidator.isAuthUser], userController.updateUser)
   .delete([authValidator.verifyToken, authValidator.isAdmin], userController.deleteUsers)
+
+router
+  .route('/:id/updatePassword')
+  .put([authValidator.verifyToken, authValidator.isAuthUser], userController.updateUserPassword)
 
 module.exports = router;

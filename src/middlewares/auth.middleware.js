@@ -67,8 +67,29 @@ async function isAuthorized(req, res, next) {
   } else next();
 }
 
+async function isAuthUser(req, res, next) {
+  const id = req._id;
+  const userId = req.params.id;
+
+  let user = await userService.getUsersById(id);
+  let updateUser = await userService.findOneByUserId(userId);
+
+  if (!updateUser || updateUser.length === 0) {
+    return res.status(400).send(JSON.stringify({
+      status: 'fail',
+      message: 'No such user exist'
+    }))
+  } else if ((user.userType !== 'ADMIN' && updateUser.userId !== user.userId) || user.userStatus !== 'APPROVED') {
+    return res.status(400).send(JSON.stringify({
+      status: 'fail',
+      message: 'Unauthorize Access. You are not allow to change other user'
+    }))
+  } else next();
+}
+
 module.exports = {
   verifyToken,
   isAdmin,
-  isAuthorized
+  isAuthorized,
+  isAuthUser
 }
