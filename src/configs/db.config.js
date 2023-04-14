@@ -1,4 +1,8 @@
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
+
 module.exports = {
   DB_NAME: 'movie_booking_app',
-  DB_URI: 'mongodb+srv://pallab-nandi:root@projects.v7ehl3e.mongodb.net/movie-booking-app'
+  DB_URI: process.env.DB_URI
 }
