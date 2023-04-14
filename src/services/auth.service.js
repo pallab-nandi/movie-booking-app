@@ -46,7 +46,7 @@ class AuthService {
 
         return {
           statusCode: 200,
-          status: 'fail',
+          status: 'success',
           message: 'Authenticate Login Successful',
           data: {
             name: user.name,

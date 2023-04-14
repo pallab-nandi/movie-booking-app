@@ -27,7 +27,7 @@ class TheatreService {
   updateTheatres(id, update) {
     return this
       .schema
-      .findOneAndUpdate({ _id: id }, update);
+      .findOneAndUpdate({ _id: id }, update, { new: true });
   }
 
   deleteTheatres(id) {

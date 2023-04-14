@@ -27,7 +27,7 @@ class UserService {
   updateUser(userId, update) {
     return this
       .schema
-      .findOneAndUpdate({ userId }, update);
+      .findOneAndUpdate({ userId }, update, { new: true });
   }
 
   deleteUsers(id) {
